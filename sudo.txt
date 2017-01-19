@@ -1,0 +1,13 @@
+LET SUDO INSULT YOU WHEN YOU ENTER INCORRECT PASSWORD
+
+sudo visudo
+/etc/sudoers
+Defaults   insults
+
+When you configure the insults parameter, it disables the badpass_message parameter which prints a specific message on the command line (the default message is
+“sorry, try again”) in case a user enters a wrong password.
+
+To modify the message, add the badpass_message parameter to the /etc/sudoers file as shown below.
+
+
+ 

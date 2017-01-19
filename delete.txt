@@ -1,0 +1,39 @@
+PERMANENTLY AND SECURELY DELETE ‘FILES AND DIRECTORIES’ IN LINUX
+
+1. Shred – Overwrite a File to Hide Content
+
+$ shred -zvu -n  5 passwords.list
+-z – adds a final overwrite with zeros to hide shredding
+-v – enables display of operation progress
+-u – truncates and removes file after overwriting
+-n – specifies number of times to overwrite file content (the default is 3)
+
+WIPE – SECURELY ERASE FILES IN LINUX
+
+yum install wipe
+$ wipe -rfi private/*
+
+-r – tells wipe to recurse into subdirectories
+-f – enables forced deletion and disable confirmation query
+-i – shows progress of deletion process
+
+SECURE-DELETETION TOOLKIT FOR LINUX
+
+yum install secure-delete
+
+$ srm -vz private/*
+
+-v – enables verbose mode
+-z – wipes the last write with zeros instead of random data
+
+SSWAP – SECURE SWAP WIPER
+
+$ cat /proc/swaps 
+$ swapon
+$ sudo swapoff /dev/sda6
+$ sudo sswap /dev/sda6    #this command may take some time to complete with 38 default passes
+
+SDMEM – SECURE MEMORY WIPER
+
+$ sudo sdmem -f -v
+

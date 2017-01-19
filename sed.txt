@@ -1,0 +1,109 @@
+USING SED
+
+BASIC SYNTAX:
+
+# sed ‘s/term/replacement/flag’ file
+
+# sed ‘s/y/Y/g’ ahappychild.txt > ahappychild2.txt
+
+Should you want to search for or replace a special character (such as /, \, &) you need to escape it, in the term or replacement strings, with a backward slash.
+
+For example, we will substitute the word and for an ampersand. At the same time, we will replace the word I with You when the first one is found at the beginning
+ of a line.
+
+# sed 's/and/\&/g;s/^I/You/g' ahappychild.txt
+
+In the above command, a ^ (caret sign) is a well-known regular expression that is used to represent the beginning of a line.
+
+As you can see, we can combine two or more substitution commands (and use regular expressions inside them) by separating them with a semicolon and enclosing
+ the set inside single quotes.
+
+Another use of sed is showing (or deleting) a chosen portion of a file. In the following example, we will display the first 5 lines of /var/log/messages from
+ Jun 8.
+
+# sed -n '/^Jun  8/ p' /var/log/messages | sed -n 1,5p
+
+Note that by default, sed prints every line. We can override this behaviour with the -n option and then tell sed to print (indicated by p) only the part of the 
+file (or the pipe) that matches the pattern (Jun 8 at the beginning of line in the first case and lines 1 through 5 inclusive in the second case).
+
+Finally, it can be useful while inspecting scripts or configuration files to inspect the code itself and leave out comments. The following sed one-liner deletes
+(d) blank lines or those starting with # (the | character indicates a boolean OR between the two regular expressions).
+
+# sed '/^#\|^$/d' apache2.conf
+
+VIEWING A RANGE OF LINES OF A DOCUMENT
+
+# sed -n '5,10p' myfile.txt
+
+VIEWING THE ENTIRE FILE EXCEPT A GIVEN RANGE
+
+# sed '20,35d' myfile.txt
+
+VIEWING NON-CONSECUTIVE LINES AND RANGES
+
+It’s possible that you’re interested in set of non-consecutive lines, or in more than one range. Let’s display lines 5-7 and 10-13 from myfile.txt:
+
+# sed -n -e '5,7p' -e '10,13p' myfile.txt
+
+REPLACING WORDS OR CHARACTERS (BASIC SUBSTITUTION)
+
+To replace every instance of the word version with story in myfile.txt, do:
+
+# sed 's/version/story/g' myfile.txt
+
+Additionally, you may want to consider using gi instead of g in order to ignore character case:
+
+# sed 's/version/story/gi' myfile.txt
+
+REPLACING WORDS OR CHARACTERS INSIDE A RANGE
+
+If you’re interested in replacing words only within a line range (30 through 40, for example), you can do:
+
+# sed '30,40 s/version/story/g' myfile.txt
+
+USING REGULAR EXPRESSIONS (ADVANCED SUBSTITUTION) – I
+
+Sometimes configuration files are loaded with comments. While this is certainly useful, it may be helpful to display only the configuration 
+directives sometimes if you want to view them all at a glance.
+
+To remove empty lines or those beginning with # from the Apache configuration file, do:
+
+# sed '/^#\|^$\| *#/d' httpd.conf
+
+The caret sign followed by the number sign (^#) indicates the beginning of a line, whereas ^$ represents blank lines. The vertical bars indicate boolean
+operations, whereas the backward slash is used to escape the vertical bars.
+
+In this particular case, the Apache configuration file has lines with #’s not at the beginning of some lines, so  *# is used to remove those as well.
+
+USING REGULAR EXPRESSIONS (ADVANCED SUBSTITUTION) – II
+
+To replace a word beginning with uppercase or lowercase with another word, we can also use sed. To illustrate, let’s replace the word zip or Zip with rar
+in myfile.txt:
+
+# sed 's/[Zz]ip/rar/g' myfile.txt
+
+VIEWING LINES CONTAINING WITH A GIVEN PATTERN
+
+# sed -n '/^Jul  1/ p' /var/log/secure
+
+IN-PLACE EDITING AND BACKING UP ORIGINAL FILE
+
+In the previous tip we used sed to modify a file but did not save the original file. Sometimes it’s a good idea to save a backup copy of the original file just in
+case. To do that, indicate a suffix following the -i option (inside single quotes) to be used to rename the original file.
+
+In the following example we will replace all instances of this or This (ignoring case) with that in myfile.txt, and we will save the original file as 
+myfile.txt.orig.
+
+# sed -i'.orig' 's/this/that/gi' myfile.txt
+
+SWITCHING PAIRS OF WORDS
+
+Let’s suppose you have a file containing full names in the format First name, Last name. To adequately process the file, you may want to switch Last name and 
+First name.
+
+# sed 's/^\(.*\),\(.*\)$/\2\, \1/g' names.txt
+
+PERFORMING TWO OR MORE SUBSTITUTIONS AT ONCE
+
+# sed -i 's/that/this/gi;s/line/verse/gi' myfile.txt
+

@@ -1,0 +1,32 @@
+SEARCH AND FILTER FILES
+
+# grep –v “#”  /etc/apache2/sites-available/default-ssl
+
+The –v option tells grep to invert its output, meaning that instead of printing matching lines, do the opposite and print all of the lines that don’t match the expression, in this case, the # 
+commented lines.
+
+FIND ALL .MP3 FILES ONLY
+
+The grep can be very useful for filtering from stdout. For example, let’s say that you have an entire folder full of music files in a bunch of different formats. 
+You want to find all of the *.mp3 files from the artist JayZ, but you don’t want any of the remixed tracks. Using a find command with a couple of grep pipes
+will do the trick:
+
+# find . –name “*.mp3” | grep –i JayZ | grep –vi “remix”
+
+In this example, we are using find to print all of the files with a *.mp3 extension, piping it to grep –i to filter out and prints all files with the name
+ “JayZ” and then another pipe to grep –vi which filters out and does not print all filenames with the string (in any case) “remix”.
+ 
+DISPLAY NUMBER OF LINES BEFORE OR AFTER SEARCH STRING
+
+# ifconfig | grep –A 4 eth0
+# ifconfig | grep  -B 2 UP
+
+Another couple of options are the –A and –B switches, which displays the matched line and number of lines either that come before or after the search string. 
+While the man page gives a more detailed explanation, I find it easiest to remember the options as –A = after, and –B = before:
+
+PRINTS NUMBER OF LINES AROUND MATCH
+
+The grep’s –C option is similar, but instead of printing the lines that come either before or after the string, it prints the lines in either direction:
+
+# ifconfig | grep –C 2 lo
+
