@@ -1,0 +1,10 @@
+http://unix.stackexchange.com/questions/176980/please-set-env-variable-chrome-bin
+
+https://karma-runner.github.io/0.13/config/configuration-file.html
+
+https://www.youtube.com/watch?v=y1mp8BiMycY
+
+https://www.npmjs.com/package/karma-chrome-launcher
+
+http://www.bradoncode.com/blog/2015/02/27/karma-tutorial/
+

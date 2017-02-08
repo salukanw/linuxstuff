@@ -1,0 +1,24 @@
+#!/bin/bash
+#Setting Backup Directory
+WL_DOMAIN="/home/"
+
+JAVA_BIN="/usr/local/shipx/java/jdk1.6.0_45"
+
+#MS_NAME=Manage server Name
+#MS_NAME=`grep "^SERVER_NAME" $WL_DOMAIN/bin/setDomainEnv.sh |awk -F";" '{print $1}' |awk -F"=" '{print $NF}'`
+
+LOG_DIR="$WL_DOMAIN/servers/$MS_NAME/logs"
+#Script output log directory
+SCRIPT_LOG="$LOG_DIR/heap_dumps.log"
+#Get the managed server process ID
+MS_PID=`ps -auxw |grep java |grep $MS_NAME |awk '{print $2}'`
+echo "`date +%x" "%X` Starting Heap Dump $DUMP_COUNT" >>$SCRIPT_LOG
+$JAVA_BIN/jmap -heap:format=b $MS_PID >>$SCRIPT_LOG 2>&1
+#Move the heap dump and keep it with creation dates to recognize the time when the dump taken
+mv heap.bin $LOG_DIR/heap_$MS_NAME`date +%m%d%Y_%H%M`.bin
+echo "`date +%x" "%X` Completed Heap Dump $DUMP_COUNT" >>$SCRIPT_LOG
+#Take 4 thread dumps after heap dump
+for i in 1 2 3 4; do
+kill -3 $MS_PID
+sleep 60
+done

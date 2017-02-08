@@ -1,0 +1,35 @@
+SAR ! System Activity Report! sar command is second best command used to check system performance or utilization after top command. From man page, ‘The sar command writes to standard output the contents of selected cumulative 
+activity counters in the operating system. The accounting system, based on the values in the count and interval parameters, writes information the specified 
+number of times spaced at the specified intervals in seconds.’ No doubt this is the best performance monitoring tool to be used for any sysadmin.
+
+sar keep collecting system resource utilization and store it in binary files. These files are called datafiles and those are located in /var/log/sa/saXX path 
+where XX is data in dd format. So this could be your one of the location to check when you are troubleshooting file system utilization.
+
+Log files are binary hence can be read only with sar using -f option. Normal sar command shows you data in real time when executed. If you need to check historic 
+data you need to use -f option and provide path of particular datafile.
+
+Command Intervals and Iterations :
+
+This command takes these two arguments which will defines the time factors of output.
+
+Interval being the time in seconds between two iterations of output samples. Normally selected as 2,5,10 seconds. Iteration or count being the number of 
+samples to be taken after interval of defined seconds. So for a command which says “sar 2 5” means 2 interval and 5 iterations i.e. take 5 samples separated 
+by 2 seconds each. i.e. if command is fired at 12:00:00 then output will include samples for times 12:00:02, 12:00:04 till 12:00:10. Check any above example 
+and you will figure out how it works.
+
+If the interval parameter is set to zero, the sar command displays the average statistics for the time since the system was started. If the iterations 
+parameter is specified without the count parameter, then reports are generated continuously as shown below.
+
+
+# sar -u 2
+Linux 2.6.39-200.24.1.el6uek.x86_64 (oratest02)         12/19/2016      _x86_64_        (4 CPU)
+
+12:09:28 PM     CPU     %user     %nice   %system   %iowait    %steal     %idle
+12:09:30 PM     all      0.75      0.00      0.50      0.25      0.00     98.50
+12:09:32 PM     all      0.88      0.00      0.38      0.13      0.00     98.62
+12:09:34 PM     all      1.12      0.00      1.75      0.25      0.00     96.88
+12:09:36 PM     all      2.38      0.00      1.38      0.12      0.00     96.12
+12:09:38 PM     all     14.79      0.00      7.39      0.50      0.00     77.32
+------- continuous reports being generated, output clipped -----
+
+
