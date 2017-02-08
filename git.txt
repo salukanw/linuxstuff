@@ -1,0 +1,47 @@
+INSTALL GIT FROM SOURCE
+
+Before you begin, first you need to install required software dependencies from the default repositories, along with the utilities that needed to build a binary
+from source:
+
+# yum groupinstall "Development Tools"
+# yum install gettext-devel openssl-devel perl-CPAN perl-devel zlib-devel
+After you have installed required software dependencies, go to the official Git release page and grab the latest version and compile it from source using 
+following series of command:
+
+# wget https://github.com/git/git/archive/v2.10.1.tar.gz -O git.tar.gz
+# tar -zxf git.tar.gz
+# cd git-2.10.1/
+# make configure
+# ./configure --prefix=/usr/local
+# make install
+# git --version
+
+
+SET UP GIT ACCOUNT IN LINUX
+
+In this section, we shall cover how to set up a Git account with correct user information such as name and email address to avoid any commit errors, and the 
+git config command is used to do that.
+
+Important: Make sure to replace username with the actual name for the Git user to be created and used on your system.
+
+You can start by creating a Git user with the useradd command as below, where the -m flag used to create the user’s home directory under /home and -s specifies 
+the user’s default shell.
+
+# useradd -m -s /bin/bash username 
+# passwd username
+Now, add the new user to the wheel group to enable the account to use the sudo command:
+
+# usermod username -aG wheel 
+
+Then configure Git with the new user as follows:
+
+# su username 
+$ sudo git config --global user.name "Your Name"
+$ sudo git config --global user.email "you@example.com"
+Now verify Git configuration using following command.
+
+$ sudo git config --list 
+If there are no errors with the configurations, you should be able to view an output with the following details:
+
+user.name=username
+user.email= username@some-domian.com

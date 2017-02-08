@@ -1,0 +1,85 @@
+hat’s Changed in RHEL 7 Administration side
+System Boot time is optimized to boot faster
+Anaconda Installer completely redesigned
+Grub boot loader version changed from 0.97 to Grub 2
+No More SysV Initd system changed to Systemd system
+Network Interface names changed from ethx to ensxxx
+Introduced new concept of creating multiple Network profiles to activate based on network you connected (Ex. Home, Office and Other)
+Default Database is changed from MySQL to MariaDB
+No More editing of Network configuration file for assigning IP address and creating Teaming interfaces use nmcli utility
+Ifconfig and route commands are deprecated in RHEL 7, Replaced with ip command
+GNOME Version 2 replaced with GNOME 3 default Desktop
+System User UID range changed from 0-449 to 0-999
+Locate command is changed to mlocate
+Cluster Resource Manager changed from RGManager to Pacemaker and all CMAN features merged into Corosync
+Netstat command replaced with ss command
+NTP Daemon replaced with chronyd faster way to sync time RHEL 6 vs RHEL 7
+Directories /bin, /sbin, /lib and /lib64 moved under /usr directory
+RHEL 6 vs RHEL 7 Difference
+Feature Name	RHEL 6	RHEL 7
+Default File System	Ext4	XFS
+Kernel Version	2.6.xx	3.10.xx
+Release Name	Santiago	Maipo
+Gnome Version	GNOME 2	GNOME 3.8
+KDE Version	KDE 4.6	KDE 4.1
+Release Date	Wednesday, November 10, 2010	Tuesday, June 10, 2014
+NFS Version	NFS 4	NFS 4.1. NFS V2 is deprecated in RHEL 7
+Samba Version	SMB 3.6	SMB 4.4
+Default Database	MariaDB	MySQL
+Cluster Resource Manager	Rgmanager	Pacemaker
+Network Interface Grouping	Team Driver will support multiple types of Teaming methods called Active-Backup, Load-balancing and Broadcast	Bonding can be done as Active-Backup, XOR, IEEE and Load Balancing
+KDUMP	Kdump does’t support with large RAM Size 	RHEL 7 can be supported up to 3TB
+Boot Loader	Grub 2
+/boot/grub2/grub.cfg	Grub 0.97
+/boot/grub/grub.conf
+File System Check	e2fsck
+-Inode check. Block and size check
+–Directory Structure check
+-Directory Link Check
+-reference count check
+-Group Summary Check 	 xfs_replair
+– Inode blockmap checks
+-Inode allocation map checks
+-Inode size check
+-Directory check
+-Path Name check
+-Link count check
+-Freemap check
+-Super block check
+Process ID	Initd  Process ID 1	 Systemd Process ID 1
+Port Security	Iptables by default service port is enabled when service is switched on.	 Firewalld instead of iptables. Iptables can also support with RHEL 7, but we can’t use both of them at the same time. Firewall will not allow any port until and unless you enabled it.
+Boot Time	40 Sec	20 Sec
+File System Size	EXT4 16TB with XFS 100TB	XFS 500TB with EXT4 16TB
+Processor Architecture	32Bit and 64Bit	Only 64Bit.
+Network Configuration Tool	setup	nmtui
+Host name Config File	/etc/sysconfig/network	/etc/hostname No need to edit hostname file to write permanent hostname simply use hostnamectl command
+Interface Name	eth0	ens33xxx
+Managing Services	service sshd start
+service sshd restart
+chkconfig sshd on	systemctl start sshd.service
+systemctl restart sshd.service
+systemctl enable sshd.service
+System Logs	/var/log/	/var/log
+journalctl
+Run Levels	runlevel 0 – Power Off
+runlevel 1 – Single User Mode
+runlevel 2 – Multi User without Networking
+runlevel 3 – Multi User CLI
+runlevel 4 – Not USed
+runlevel 5 – GUI Mode
+runlevel 6 – Restart	There is no run levels in RHEL 7. Run levels are called as targets
+Poweroff.target
+rescue.target
+multi-user.target
+graphical.target
+reboot.target
+UID Information	Normal User UID will start from 500 to 65534
+System Users UID will start from 1 to 499	Normal User UID start from 1000 – 65534
+System Users UID will start from 1 to 999Because Services are increased compare to RHEL 6
+By Pass Root Password Prompt	append 1 or s or init=/bin/bash to Kernel command line	Append rd.break or init=/bin/bash to kernel command line
+Rebooting and Poweroff	poweroff – init 0
+reboot – init 6	systemctl poweroff
+systemctl reboot
+YUM Commands	yum groupinstall
+yum groupinfo	yum group install
+yum group info
