@@ -1,1 +1,152 @@
 HOW TO WRITE AND USE CUSTOM SHELL FUNCTIONS AND LIBRARIES
+
+WHERE TO STORE SHELL SCRIPTS
+
+In order to run your scripts without typing a full/absolute path, they must be stored in one of the directories in the $PATH environment variable.
+
+To check your $PATH, issues the command below:
+
+$ echo $PATH
+
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+
+Normally, if the directory bin exists in a users home directory, it is automatically included in his/her $PATH. You can store your shell scripts here.
+
+Therefore, create the bin directory (which may also store Perl, Awk or Python scripts or any other programs):
+
+$ mkdir ~/bin
+
+Next, create a directory called lib (short for libraries) where you’ll keep your own libraries. You can also keep libraries for other languages such as 
+C, Python and so on, in it. Under it, create another directory called sh; this will particularly store you shell libraries:
+
+$ mkdir -p ~/lib/sh 
+
+CREATE YOUR OWN SHELL FUNCTIONS AND LIBRARIES
+
+A shell function is a group of commands that perform a special task in a script. They work similarly to procedures, subroutines and functions in other 
+programming languages.
+
+The syntax for writing a function is:
+
+function_name() { list of commands }
+
+For example, you can write a function in a script to show the date as follows:
+
+showDATE() {date;}
+
+Every time you want to display date, simply invoke the function above using its name:
+
+$ showDATE
+
+A shell library is simply a shell script, however, you can write a library to only store your functions that you can later call from other shell scripts.
+
+Below is an example of a library called libMYFUNCS.sh in my ~/lib/sh directory with more examples of functions:
+
+#!/bin/bash 
+
+#Function to clearly list directories in PATH 
+showPATH() { 
+        oldifs="$IFS"   #store old internal field separator
+        IFS=:              #specify a new internal field separator
+        for DIR in $PATH ;  do echo $DIR ;  done
+        IFS="$oldifs"    #restore old internal field separator
+}
+
+#Function to show logged user
+showUSERS() {
+        echo -e “Below are the user logged on the system:\n”
+        w
+}
+
+#Print a user’s details 
+printUSERDETS() {
+        oldifs="$IFS"    #store old internal field separator
+        IFS=:                 #specify a new internal field separator
+        read -p "Enter user name to be searched:" uname   #read username
+        echo ""
+       #read and store from a here string values into variables using : as  a  field delimiter
+    read -r username pass uid gid comments homedir shell <<< "$(cat /etc/passwd | grep   "^$uname")"
+       #print out captured values
+        echo  -e "Username is            : $username\n"
+        echo  -e "User's ID                 : $uid\n"
+        echo  -e "User's GID              : $gid\n"
+        echo  -e "User's Comments    : $comments\n"
+        echo  -e "User's Home Dir     : $homedir\n"
+        echo  -e "User's Shell             : $shell\n"
+        IFS="$oldifs"         #store old internal field separator
+}
+Save the file and make the script executable.
+
+HOW TO INVOKE FUNCTIONS FROM A LIBRARY
+
+To use a function in a lib, you need to first of all include the lib in the shell script where the function will be used, in the form below:
+
+$ ./path/to/lib
+OR
+$ source /path/to/lib
+
+So you would use the function printUSERDETS from the lib ~/lib/sh/libMYFUNCS.sh in another script as shown below.
+
+You do not have to write another code in this script to print a particular user’s details, simply call an existing function.
+
+Open a new file with the name test.sh:
+
+#!/bin/bash 
+
+#include lib
+.  ~/lib/sh/libMYFUNCS.sh
+
+#use function from lib
+printUSERDETS
+
+#exit script
+exit 0
+Save it, then make the script executable and run it:
+
+$ chmod 755 test.sh
+$ ./test.sh
+
+
+COMMON CAPABILITIES
+
+The following terminfo capabilities are useful for prompt customization and are supported by many terminals. #1 and #2 are placeholders for numeric arguments.
+Capability	Escape sequence	Description
+
+TEXT ATTRIBUTES
+
+blink	\E[5m	blinking text on
+bold	\E[1m	bold text on
+dim	  	\E[2m	dim text on
+rev		\E[7m	reverse video on (switch text/background colors)
+sitm	\E[3m	italic text on
+ritm	\E[23m	italic text off
+smso	\E[7m	highlighted text on
+rmso	\E[27m	highlighted text off
+smul	\E[4m	underlined text on
+rmul	\E[24m	underlined text off
+setab #1	\E[4#1m	set background color #1 (0-7)
+setaf #1	\E[3#1m	set text color #1 (0-7)
+sgr0		\E(B\E[m	reset text attributes
+
+CURSOR MOVEMENT
+
+sc		\E7	save cursor position
+rc		\E8	restore saved cursor position
+clear	\E[H\E[2J	clear screen and move cursor to top left
+cuu #1	\E[#1A	move cursor up #1 rows
+cud #1	\E[#1B	move cursor down #1 rows
+cuf #1	\E[#1C	move cursor right #1 columns
+cub #1	\E[#1D	move cursor left #1 columns
+home	\E[H	move cursor to top left
+hpa #1	\E[#1G	move cursor to column #1
+vpa #1	\E[#1d	move cursor to row #1, first column
+cup #1 #2	\E[#1;#2H	move cursor to row #1, column #2
+
+REMOVING CHARACTERS
+
+dch #1	\E#1P	remove #1 characters (like backspacing)
+dl #1	\E#1M	remove #1 lines
+ech #1	\E#1X	clear #1 characters (without moving cursor)
+ed		\E[J	clear to bottom of screen
+el		\E[K	clear to end of line
+el1		\E[1K	clear to beginning of line
